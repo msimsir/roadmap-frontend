@@ -1,14 +1,26 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
+  <Navigation />
   <router-view />
 </template>
+<script lang="ts">
+import { defineComponent } from "vue";
+import Navigation from "./components/Navigation.vue";
+
+export default defineComponent({
+  name: "app",
+  components: { Navigation },
+});
+</script>
 
 <style lang="scss">
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Sora", sans-serif;
+}
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
