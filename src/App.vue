@@ -14,6 +14,8 @@ export default defineComponent({
 
 <style lang="scss">
 @import url("https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap");
+@import "@braks/vue-flow/dist/style.css";
+@import "@braks/vue-flow/dist/theme-default.css";
 * {
   margin: 0;
   padding: 0;
@@ -26,10 +28,19 @@ export default defineComponent({
   text-align: center;
   color: #2c3e50;
 }
+.wrapper {
+  padding: 0px;
+  margin: 16px 128px;
+  @media screen and (max-width: 720px) {
+    margin: 16px 64px;
+  }
+
+  @media screen and (max-width: 600px) {
+    margin: 16px 16px;
+  }
+}
 
 nav {
-  padding: 30px;
-
   a {
     font-weight: bold;
     color: #2c3e50;

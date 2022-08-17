@@ -1,17 +1,11 @@
 <template>
-  <nav>
+  <nav class="wrapper">
     <div class="logo nav-item">
       <Logo />
-      <router-link
-        class="router-link home"
-        to="/"
-      >ROADMAP</router-link>
+      <router-link class="router-link home" to="/">ROADMAP</router-link>
     </div>
-    <div class="nav-item">
-      <router-link
-        class="router-link"
-        to="/about"
-      >LOGIN/REGISTER</router-link>
+    <div class="nav-item login">
+      <router-link class="router-link" to="/about">LOGIN/REGISTER</router-link>
     </div>
   </nav>
 </template>
@@ -32,8 +26,7 @@ nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0px;
-  margin: 16px 64px;
+
   .nav-item {
     height: 100%;
     display: flex;
@@ -46,6 +39,9 @@ nav {
   }
   .home {
     margin-left: 16px;
+  }
+  .login {
+    margin-left: auto;
   }
 }
 </style>

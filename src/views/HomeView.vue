@@ -6,8 +6,12 @@
       <RoadMapCard />
       <RoadMapCard />
       <RoadMapCard />
+      <RoadMapCard />
+      <RoadMapCard />
+      <RoadMapCard />
+      <RoadMapCard />
+      <RoadMapCard />
     </div>
-    <p>This is home view</p>
   </div>
 </template>
 
@@ -22,19 +26,16 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+.home {
+  margin: 0px 64px;
+}
 .cards-container {
   border-radius: 8px;
   padding: 0px;
   margin: 0px 64px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, 15rem);
-
-  div {
-    margin-right: 30px;
-    margin-top: 30px;
-    &:last-child {
-      margin-right: 0px;
-    }
-  }
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-rows: auto;
+  grid-gap: 16px;
 }
 </style>
