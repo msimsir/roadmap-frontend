@@ -29,18 +29,15 @@
       </div>
     </div>
     <div class="flow-chart-container border">
-      <VueFlow v-model="elements">
-        <Controls />
-      </VueFlow>
+      <Flow />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { VueFlow, Controls, Node, Edge } from "@braks/vue-flow";
 import { VueTagsInput } from "@sipec/vue3-tags-input";
-import { initialElements } from "../contants/initialElements";
+import Flow from "../components/flow/Flow.vue";
 import { IRoadmap, ITag } from "../types";
 
 export default defineComponent({
@@ -54,15 +51,15 @@ export default defineComponent({
       } as IRoadmap,
       tag: "",
       formTags: [] as ITag[],
-      elements: [] as (Node | Edge)[],
     };
   },
-  components: { VueFlow, Controls, VueTagsInput },
+  components: { Flow, VueTagsInput },
   methods: {
     clearAllFields() {
       this.roadmap.name = "";
       this.roadmap.description = "";
       this.roadmap.tags = [];
+      this.formTags = [];
       this.tag = "";
     },
     saveRoadmap() {
@@ -75,13 +72,47 @@ export default defineComponent({
       this.formTags = newTags.slice();
     },
   },
-  created() {
-    this.elements = initialElements;
-  },
 });
 </script>
 
 <style lang="scss">
+.dndflow {
+  flex-direction: column;
+  display: flex;
+  height: 100%;
+}
+
+.dndflow aside {
+  border-left: 1px solid #eee;
+  padding: 15px 10px;
+  font-size: 12px;
+  background: #fcfcfc;
+}
+
+.dndflow aside > * {
+  margin-bottom: 10px;
+  cursor: grab;
+}
+
+.dndflow aside .description {
+  margin-bottom: 10px;
+}
+
+.dndflow .vue-flow-wrapper {
+  flex-grow: 1;
+  height: 100%;
+}
+
+@media screen and (min-width: 768px) {
+  .dndflow {
+    flex-direction: row;
+  }
+
+  .dndflow aside {
+    max-width: 180px;
+    border-top: 1px solid #eee;
+  }
+}
 .vue-tags-input.vue-tags-input {
   width: 100%;
   max-width: 100%;

@@ -1,4 +1,4 @@
-import { MarkerType, Edge, Node } from "@braks/vue-flow";
+import { Edge, Node } from "@braks/vue-flow";
 
 export const initialElements: (Node | Edge)[] = [
   {
@@ -10,42 +10,25 @@ export const initialElements: (Node | Edge)[] = [
   },
   {
     id: "2",
-    type: "output",
-    label: "Node 2",
+    label: "Node <strong>B</strong>",
     position: { x: 100, y: 100 },
-    class: "light",
   },
-  { id: "3", label: "Node 3", position: { x: 400, y: 100 }, class: "light" },
-  { id: "4", label: "Node 4", position: { x: 150, y: 200 }, class: "light" },
   {
-    id: "5",
-    type: "output",
-    label: "Node 5",
-    position: { x: 300, y: 300 },
-    class: "light",
+    id: "3",
+    label: "Node <strong>C</strong>",
+    position: { x: 400, y: 100 },
+    style: {
+      background: "#D6D5E6",
+      color: "#333",
+      border: "1px solid #222138",
+      width: 180,
+    },
   },
-  { id: "e1-2", source: "1", target: "2", animated: true },
   {
-    id: "e1-3",
-    label: "edge with arrowhead",
+    id: "e1-2",
     source: "1",
-    target: "3",
-    markerEnd: MarkerType.Arrow,
-  },
-  {
-    id: "e4-5",
-    type: "step",
-    label: "step-edge",
-    source: "4",
-    target: "5",
-    style: { stroke: "orange" },
-    labelBgStyle: { fill: "orange" },
-  },
-  {
-    id: "e3-4",
-    type: "smoothstep",
-    label: "smoothstep-edge",
-    source: "3",
-    target: "4",
+    target: "2",
+    label: "Updateable edge",
+    updatable: true,
   },
 ];
