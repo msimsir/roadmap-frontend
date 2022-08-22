@@ -42,3 +42,11 @@
     <rect y="20.5263" width="9.47368" height="9.47368" rx="4" fill="#F5DD90" />
   </svg>
 </template>
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  name: "Logo"
+})
+</script>
+

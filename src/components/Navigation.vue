@@ -5,7 +5,9 @@
       <router-link class="router-link home" to="/">ROADMAP</router-link>
     </div>
     <div class="nav-item login">
-      <router-link class="router-link" to="/about">LOGIN/REGISTER</router-link>
+      <router-link class="router-link" to="/about">
+        LOGIN/REGISTER
+      </router-link>
     </div>
   </nav>
 </template>

@@ -8,16 +8,24 @@
         <label>Name</label>
         <input
           type="text"
-          placeholder="Roadmap Name"
+          v-model="roadmap.name"
         />
       </div>
       <div class="form-element">
         <label>Description</label>
-        <textarea />
+        <textarea v-model="roadmap.description" />
       </div>
       <div class="form-element">
         <label>Tags</label>
-        <textarea />
+        <vue-tags-input
+          v-model="tag"
+          :tags="formTags"
+          @tags-changed="addTags"
+        />
+      </div>
+      <div class="form-element button-container">
+        <button @click="saveRoadmap">Save</button>
+        <button @click="clearAllFields">Clear All Fields</button>
       </div>
     </div>
     <div class="flow-chart-container border">
@@ -31,23 +39,65 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { VueFlow, Controls, Node, Edge } from "@braks/vue-flow";
+import { VueTagsInput } from "@sipec/vue3-tags-input";
 import { initialElements } from "../contants/initialElements";
+import { IRoadmap, ITag } from "../types";
 
 export default defineComponent({
   name: "CreateRoadMapView",
   data() {
     return {
+      roadmap: {
+        name: "",
+        description: "",
+        tags: [],
+      } as IRoadmap,
+      tag: "",
+      formTags: [] as ITag[],
       elements: [] as (Node | Edge)[],
     };
   },
-  components: { VueFlow, Controls },
+  components: { VueFlow, Controls, VueTagsInput },
+  methods: {
+    clearAllFields() {
+      this.roadmap.name = "";
+      this.roadmap.description = "";
+      this.roadmap.tags = [];
+      this.tag = "";
+    },
+    saveRoadmap() {
+      this.$store.commit("saveRoadmap", {
+        ...this.roadmap,
+        tags: this.formTags.map((e: ITag) => e.text).slice(),
+      });
+    },
+    addTags(newTags: ITag[]) {
+      this.formTags = newTags.slice();
+    },
+  },
   created() {
     this.elements = initialElements;
   },
 });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
+.vue-tags-input.vue-tags-input {
+  width: 100%;
+  max-width: 100%;
+}
+
+.vue-tags-input .ti-input {
+  border-radius: 4px;
+  padding: 8px 16px;
+}
+
+.vue-tags-input .ti-tag {
+  border-radius: 4px;
+  padding: 8px 16px;
+  background-color: #324376;
+}
+
 .create-roadmap-container {
   height: 80vh;
   display: grid;
@@ -94,6 +144,33 @@ export default defineComponent({
       border: 1px solid #d9d9d9;
       border-radius: 4px;
       padding: 8px 16px;
+    }
+  }
+  .button-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    @media screen and (max-width: 1380px) {
+      flex-direction: column;
+      & > button {
+        width: 100%;
+        margin-top: 8px;
+      }
+    }
+    & > button {
+      padding: 8px 16px;
+      border-radius: 8px;
+      outline: none;
+      border: none;
+      border: 2px solid #f5dd90;
+      font-weight: 500;
+      background: none;
+      cursor: pointer;
+      &:hover {
+        background-color: #f5dd90;
+        color: #324376;
+      }
     }
   }
 }
