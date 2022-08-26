@@ -20,7 +20,7 @@ import { defineComponent } from "vue";
 import RoadMapCard from "../components/RoadMapCard.vue";
 
 export default defineComponent({
-  name: "HomeView",
+  name: "Home",
   components: { RoadMapCard },
 });
 </script>

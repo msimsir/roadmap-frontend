@@ -7,12 +7,12 @@ import PreviewRoadMapView from "../views/PreviewRoadMapView.vue";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    name: "home",
+    name: "Home",
     component: HomeView,
   },
   {
-    path: "/about",
-    name: "about",
+    path: "/login",
+    name: "Login",
     component: LoginView,
   },
   {

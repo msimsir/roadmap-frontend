@@ -1,14 +1,39 @@
 <template>
-  <Navigation />
-  <router-view />
+  <div class="app">
+    <Navigation v-if="!navigation" />
+    <router-view />
+  </div>
 </template>
+
 <script lang="ts">
 import { defineComponent } from "vue";
 import Navigation from "./components/Navigation.vue";
 
 export default defineComponent({
   name: "app",
+  data() {
+    return {
+      navigation: null as null | boolean,
+    };
+  },
   components: { Navigation },
+  methods: {
+    checkRoute() {
+      if (this.$route.name === "Login") {
+        this.navigation = true;
+      } else {
+        this.navigation = false;
+      }
+    },
+  },
+  created() {
+    this.checkRoute();
+  },
+  watch: {
+    $route() {
+      this.checkRoute();
+    },
+  },
 });
 </script>
 
@@ -28,11 +53,18 @@ export default defineComponent({
   text-align: center;
   color: #2c3e50;
 }
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 .wrapper {
   padding: 0px;
-  margin: 16px 128px;
+  margin: 16px 64px;
   @media screen and (max-width: 720px) {
-    margin: 16px 64px;
+    margin: 16px 32px;
   }
 
   @media screen and (max-width: 600px) {

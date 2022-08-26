@@ -4,7 +4,7 @@
     <div
       class="vue-flow__node-input"
       :draggable="true"
-      @dragstart=" onDragStart($event, 'input')"
+      @dragstart="onDragStart($event, 'input')"
     >
       Input Node
     </div>
@@ -24,7 +24,7 @@
     </div>
   </aside>
 </template>
-<script lang="ts" >
+<script lang="ts">
 import { defineComponent } from "vue";
 
 export default defineComponent({
@@ -39,4 +39,3 @@ export default defineComponent({
   },
 });
 </script>
-

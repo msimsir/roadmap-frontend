@@ -6,10 +6,7 @@
       </div>
       <div class="form-element">
         <label>Name</label>
-        <input
-          type="text"
-          v-model="roadmap.name"
-        />
+        <input type="text" v-model="roadmap.name" />
       </div>
       <div class="form-element">
         <label>Description</label>
@@ -37,7 +34,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { VueTagsInput } from "@sipec/vue3-tags-input";
-import Flow from "../components/flow/Flow.vue";
+import Flow from "../components/Flow/Flow.vue";
 import { IRoadmap, ITag } from "../types";
 
 export default defineComponent({

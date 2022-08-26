@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="dndflow"
-    @drop="onDrop"
-  >
+  <div class="dndflow" @drop="onDrop">
     <VueFlow
       v-model="elements"
       @dragover="onDragOver"
@@ -50,6 +47,7 @@ export default defineComponent({
       const type = event.dataTransfer?.getData("application/vueflow");
       const position = { x: event.clientX - 800, y: event.clientY - 400 };
       const newNode = {
+        // eslint-disable-next-line
         id: (this.elements?.length + 1) as any,
         type,
         position,
@@ -63,6 +61,7 @@ export default defineComponent({
         event.dataTransfer.dropEffect = "move";
       }
     },
+    // eslint-disable-next-line
     onLoad(flowInstance: any) {
       flowInstance.fitView();
     },
@@ -84,4 +83,3 @@ export default defineComponent({
   },
 });
 </script>
-
