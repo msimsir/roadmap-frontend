@@ -32,7 +32,6 @@ export default defineComponent({
 .cards-container {
   border-radius: 8px;
   padding: 0px;
-  margin: 0px 64px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   grid-template-rows: auto;
