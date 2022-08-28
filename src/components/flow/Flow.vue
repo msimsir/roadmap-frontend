@@ -26,6 +26,7 @@ import {
   Connection,
   Edge,
   FlowEvents,
+  EdgeMouseEvent,
 } from "@braks/vue-flow";
 import Sidebar from "./Sidebar.vue";
 import { initialElements } from "../../contants/initialElements";
@@ -71,10 +72,10 @@ export default defineComponent({
     onEdgeUpdate({ edge, connection }: FlowEvents["edgeUpdate"]) {
       this.elements = updateEdge(edge, connection, this.elements);
     },
-    onEdgeUpdateStart(edge: Edge) {
+    onEdgeUpdateStart(edge: EdgeMouseEvent) {
       console.log("start update", edge);
     },
-    onEdgeUpdateEnd(edge: Edge) {
+    onEdgeUpdateEnd(edge: EdgeMouseEvent) {
       console.log("end update", edge);
     },
   },
