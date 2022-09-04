@@ -40,7 +40,9 @@
           />
         </div>
         <div class="form-element">
-          <button @click.prevent="signUp" class="login-button">SIGN UP</button>
+          <button @click.prevent="loginHandler" class="login-button">
+            {{ isRegisterForm ? "SIGN UP" : "SIGN IN" }}
+          </button>
         </div>
       </form>
       <p></p>
@@ -57,46 +59,99 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
-import { useQuery } from "@vue/apollo-composable";
-import { GET_ROADMAP_QUERY } from "../graphql/documents";
+import { defineComponent } from "vue";
+import { useMutation } from "@vue/apollo-composable";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+import { SIGNIN_MUTATION, SIGNUP_MUTATION } from "../graphql/documents";
 import Logo from "../components/Icons/Logo.vue";
 import EnvelopeIcon from "../components/Icons/EnvelopeIcon.vue";
 import LockIcon from "../components/Icons/LockIcon.vue";
 import UserIcon from "../components/Icons/UserIcon.vue";
-import { IUser } from "../types";
+import { IUserRegisterForm, Nullable } from "../types";
 
 export default defineComponent({
   name: "Login",
   data() {
     return {
       isRegisterForm: false,
+      signUpError: null as Nullable<string>,
+      loading: false,
       userForm: {
         firstName: "",
         lastName: "",
         username: "",
         email: "",
         password: "",
-      } as IUser,
+      } as IUserRegisterForm,
     };
   },
   components: { Logo, EnvelopeIcon, LockIcon, UserIcon },
   setup() {
-    const variables = ref({
-      id: "62febf73e2e217070cb78a80",
-    });
-    const { result } = useQuery(GET_ROADMAP_QUERY, variables);
-    console.log("result", result);
+    const store = useStore();
+    const router = useRouter();
+    const {
+      mutate: signUpMutate,
+      onError: onSignUpError,
+      loading: signUpLoading,
+    } = useMutation(SIGNUP_MUTATION);
+    const { mutate: signInMutate, onError: onSignInError } =
+      useMutation(SIGNIN_MUTATION);
+
+    async function signUp(userForm: IUserRegisterForm) {
+      let signUpResult = await signUpMutate({
+        ...userForm,
+      });
+      const payload = signUpResult?.data?.signIn;
+      const user = {
+        _id: payload?.user?._id,
+        firstName: payload?.user?.firstName,
+        lastName: payload?.user?.lastName,
+        username: payload?.user?.username,
+        email: payload?.user?.email,
+        token: payload?.token,
+      };
+      store.commit("setUser", user);
+      console.log(signUpLoading);
+      router.push({ name: "Home" });
+      onSignUpError((err) => {
+        return err;
+      });
+    }
+
+    async function signIn(email: string, password: string) {
+      let signInResult = await signInMutate({
+        email,
+        password,
+      });
+      const payload = signInResult?.data?.signIn;
+      const user = {
+        _id: payload?.user?._id,
+        firstName: payload?.user?.firstName,
+        lastName: payload?.user?.lastName,
+        username: payload?.user?.username,
+        email: payload?.user?.email,
+        token: payload?.token,
+      };
+      store.commit("setUser", user);
+      router.push({ name: "Home" });
+      onSignInError((err) => {
+        return err;
+      });
+    }
+
+    return { signUp, signIn };
   },
   methods: {
     switchForm() {
       this.isRegisterForm = !this.isRegisterForm;
     },
-    signIn() {
-      console.log("signin");
-    },
-    signUp() {
-      console.log("signup");
+    loginHandler() {
+      if (this.isRegisterForm) {
+        this.signUp(this.userForm);
+      } else {
+        this.signIn(this.userForm.email, this.userForm.password);
+      }
     },
   },
 });

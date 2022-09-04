@@ -10,12 +10,12 @@ export const initialElements: (Node | Edge)[] = [
   },
   {
     id: "2",
-    label: "Node <strong>B</strong>",
+    label: "Node B",
     position: { x: 100, y: 100 },
   },
   {
     id: "3",
-    label: "Node <strong>C</strong>",
+    label: "Node C",
     position: { x: 400, y: 100 },
     style: {
       background: "#D6D5E6",

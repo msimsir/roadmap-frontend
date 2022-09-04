@@ -5,8 +5,8 @@
         <h3>Create Roadmap</h3>
       </div>
       <div class="form-element">
-        <label>Name</label>
-        <input type="text" v-model="roadmap.name" />
+        <label>Title</label>
+        <input type="text" v-model="roadmap.title" />
       </div>
       <div class="form-element">
         <label>Description</label>
@@ -21,53 +21,91 @@
         />
       </div>
       <div class="form-element button-container">
-        <button @click="saveRoadmap">Save</button>
+        <button @click="onSave">Save</button>
         <button @click="clearAllFields">Clear All Fields</button>
       </div>
     </div>
     <div class="flow-chart-container border">
-      <Flow />
+      <Flow :flowData="roadmap.elements" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { useRouter } from "vue-router";
+import { useMutation } from "@vue/apollo-composable";
 import { VueTagsInput } from "@sipec/vue3-tags-input";
+import { Elements } from "@braks/vue-flow";
 import Flow from "../components/Flow/Flow.vue";
-import { IRoadmap, ITag } from "../types";
+import { IRoadmap, IRoadmapWithUser, ITag } from "../types";
+import { initialElements } from "../contants/initialElements";
+import { CREATE_ROADMAP_MUTATION } from "../graphql/documents";
 
 export default defineComponent({
   name: "CreateRoadMapView",
   data() {
     return {
       roadmap: {
-        name: "",
+        title: "",
         description: "",
         tags: [],
+        elements: [] as Elements,
       } as IRoadmap,
       tag: "",
       formTags: [] as ITag[],
+      preview: true,
     };
   },
   components: { Flow, VueTagsInput },
+  setup() {
+    const router = useRouter();
+    const {
+      mutate: createRoadmapMutate,
+      onError: onCreateRoadmapError,
+      loading: onCreateRoadmapLoading,
+    } = useMutation(CREATE_ROADMAP_MUTATION);
+
+    async function createRoadmap(roadmap: IRoadmapWithUser) {
+      let createRoadmapResult = await createRoadmapMutate({
+        ...roadmap,
+      });
+      console.log("createRoadmapResult", createRoadmapResult);
+      console.log(onCreateRoadmapLoading);
+      router.push({ name: "Home" });
+      onCreateRoadmapError((err) => {
+        return err;
+      });
+    }
+    return { createRoadmap };
+  },
   methods: {
     clearAllFields() {
-      this.roadmap.name = "";
+      this.roadmap.title = "";
       this.roadmap.description = "";
       this.roadmap.tags = [];
+      this.roadmap.elements = [];
       this.formTags = [];
       this.tag = "";
     },
-    saveRoadmap() {
+    onSave() {
       this.$store.commit("saveRoadmap", {
         ...this.roadmap,
         tags: this.formTags.map((e: ITag) => e.text).slice(),
+      });
+      this.createRoadmap({
+        ...this.roadmap,
+        elements: JSON.stringify(this.roadmap.elements),
+        tags: this.formTags.map((e: ITag) => e.text).slice(),
+        userId: this.$store.state.user._id,
       });
     },
     addTags(newTags: ITag[]) {
       this.formTags = newTags.slice();
     },
+  },
+  created() {
+    this.roadmap.elements = initialElements;
   },
 });
 </script>
@@ -81,9 +119,11 @@ export default defineComponent({
 
 .dndflow aside {
   border-left: 1px solid #eee;
-  padding: 15px 10px;
+  padding: 16px;
   font-size: 12px;
   background: #fcfcfc;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
 }
 
 .dndflow aside > * {
@@ -100,13 +140,38 @@ export default defineComponent({
   height: 100%;
 }
 
+.dndflow aside .vue-flow__node-input,
+.vue-flow__node-default,
+.vue-flow__node-output {
+  width: 167px;
+}
+
+.dndflow .item-options {
+  margin-top: 32px;
+  text-align: left;
+  & > p {
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  & > div {
+    width: 100%;
+    & > .item-value {
+      width: 100%;
+      margin-top: 2px;
+      border-radius: 4px;
+      padding: 4px;
+      outline: none;
+    }
+  }
+}
+
 @media screen and (min-width: 768px) {
   .dndflow {
     flex-direction: row;
   }
 
   .dndflow aside {
-    max-width: 180px;
+    max-width: 200px;
     border-top: 1px solid #eee;
   }
 }
@@ -117,12 +182,12 @@ export default defineComponent({
 
 .vue-tags-input .ti-input {
   border-radius: 4px;
-  padding: 8px 16px;
+  padding: 8px;
 }
 
 .vue-tags-input .ti-tag {
   border-radius: 4px;
-  padding: 8px 16px;
+  padding: 8px;
   background-color: #324376;
 }
 
@@ -171,7 +236,7 @@ export default defineComponent({
       width: 100%;
       border: 1px solid #d9d9d9;
       border-radius: 4px;
-      padding: 8px 16px;
+      padding: 8px;
     }
   }
   .button-container {

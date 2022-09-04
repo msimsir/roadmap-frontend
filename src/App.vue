@@ -27,7 +27,18 @@ export default defineComponent({
     },
   },
   created() {
+    const user = this.localUser ? JSON.parse(this.localUser) : null;
+    if (user) {
+      this.$store.commit("setUser", user);
+    } else {
+      this.$store.commit("clearUser");
+    }
     this.checkRoute();
+  },
+  computed: {
+    localUser() {
+      return localStorage.getItem("user");
+    },
   },
   watch: {
     $route() {

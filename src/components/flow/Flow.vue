@@ -9,10 +9,15 @@
       @connect="onConnect"
       @edge-update-start="onEdgeUpdateStart"
       @edge-update-end="onEdgeUpdateEnd"
+      @node-click="onNodeClick"
+      @edge-click="onEdgeClick"
     >
       <Controls />
     </VueFlow>
-    <Sidebar />
+    <Sidebar
+      v-model:selected-item-value="selectedItemValue"
+      @change="changeNodeTitle"
+    />
   </div>
 </template>
 <script lang="ts">
@@ -27,12 +32,16 @@ import {
   Edge,
   FlowEvents,
   EdgeMouseEvent,
+  NodeMouseEvent,
+  GraphNode,
+  GraphEdge,
 } from "@braks/vue-flow";
 import Sidebar from "./Sidebar.vue";
 import { initialElements } from "../../contants/initialElements";
 
 export default defineComponent({
   name: "Flow",
+  props: ["flowData"],
   components: {
     Sidebar,
     VueFlow,
@@ -40,8 +49,15 @@ export default defineComponent({
   },
   data() {
     return {
+      selectedItem: {} as GraphNode | GraphEdge,
+      selectedItemValue: "",
       elements: [] as Elements,
     };
+  },
+  computed: {
+    changedElements() {
+      return this.flowData || this.elements;
+    },
   },
   methods: {
     onDrop(event: DragEvent) {
@@ -67,7 +83,7 @@ export default defineComponent({
       flowInstance.fitView();
     },
     onConnect(params: Connection | Edge) {
-      this.elements = addEdge(params, this.elements);
+      this.elements = addEdge({ ...params, updatable: true }, this.elements);
     },
     onEdgeUpdate({ edge, connection }: FlowEvents["edgeUpdate"]) {
       this.elements = updateEdge(edge, connection, this.elements);
@@ -77,6 +93,18 @@ export default defineComponent({
     },
     onEdgeUpdateEnd(edge: EdgeMouseEvent) {
       console.log("end update", edge);
+    },
+    onNodeClick(nodeMouseEvent: NodeMouseEvent) {
+      this.selectedItemValue = nodeMouseEvent.node.label as string;
+      this.selectedItem = nodeMouseEvent.node;
+    },
+    onEdgeClick(edgeMouseEvent: EdgeMouseEvent) {
+      this.selectedItemValue = edgeMouseEvent.edge.label as string;
+      this.selectedItem = edgeMouseEvent.edge;
+    },
+    // eslint-disable-next-line
+    changeNodeTitle(e: any) {
+      this.selectedItem.label = e.target.value;
     },
   },
   created() {

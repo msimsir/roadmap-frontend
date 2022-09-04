@@ -1,30 +1,44 @@
 import { createStore } from "vuex";
-import { IRoadmap } from "@/types";
+import { IRoadmap, ISignInUser } from "@/types";
 import { State } from "vue";
 
 export default createStore<State>({
   state: {
     selectedRoadmap: {
-      name: "",
+      title: "",
       description: "",
       tags: [],
+      elements: [],
     },
+    user: null,
     roadmaps: [],
     favoriteRoadmaps: [],
   },
   getters: {
     getFavoriteRoadmaps(state) {
-      state.favoriteRoadmaps;
+      return state.favoriteRoadmaps;
     },
     selectedRoadmap(state) {
-      state.selectedRoadmap;
+      return state.selectedRoadmap;
+    },
+    getUser(state) {
+      return state.user;
     },
   },
   mutations: {
     saveRoadmap(state, payload: IRoadmap) {
-      state.selectedRoadmap.name = payload.name;
+      state.selectedRoadmap.title = payload.title;
       state.selectedRoadmap.description = payload.description;
       state.selectedRoadmap.tags = payload.tags.slice();
+      state.selectedRoadmap.elements = payload.elements;
+    },
+    setUser(state, payload: ISignInUser) {
+      state.user = payload;
+      localStorage.setItem("user", JSON.stringify({ ...state.user }));
+    },
+    clearUser(state) {
+      state.user = null;
+      localStorage.clear();
     },
   },
   actions: {},
