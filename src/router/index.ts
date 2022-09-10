@@ -3,6 +3,7 @@ import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import CreateRoadMapView from "../views/CreateRoadMapView.vue";
 import PreviewRoadMapView from "../views/PreviewRoadMapView.vue";
+import ProfileRoadmapsView from "../views/ProfileRoadmapsView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -24,6 +25,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/preview-roadmap/:roadmap-id",
     name: "PreviewRoadMap",
     component: PreviewRoadMapView,
+  },
+  {
+    path: "/your-roadmaps",
+    name: "ProfileRoadmaps",
+    component: ProfileRoadmapsView,
   },
 ];
 

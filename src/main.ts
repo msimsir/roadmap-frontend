@@ -1,6 +1,8 @@
 import { createApp } from "vue";
 import { DefaultApolloClient } from "@vue/apollo-composable";
 import { ApolloClient, InMemoryCache } from "@apollo/client/core";
+import vClickOutside from "click-outside-vue3";
+
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
@@ -15,4 +17,5 @@ createApp(App)
   .provide(DefaultApolloClient, apolloClient)
   .use(store)
   .use(router)
+  .use(vClickOutside)
   .mount("#app");

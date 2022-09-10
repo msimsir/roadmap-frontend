@@ -43,7 +43,7 @@ import { initialElements } from "../contants/initialElements";
 import { CREATE_ROADMAP_MUTATION } from "../graphql/documents";
 
 export default defineComponent({
-  name: "CreateRoadMapView",
+  name: "CreateRoadMap",
   data() {
     return {
       roadmap: {

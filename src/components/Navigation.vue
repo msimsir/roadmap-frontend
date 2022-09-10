@@ -14,10 +14,21 @@
     <div class="nav-item" v-if="user">
       <div class="profile-container">
         <span class="box" @click="handleProfileVisible">{{ profile }}</span>
-        <div class="profile-list" v-if="profileVisible">
-          <p>Profile Details</p>
-          <p>Your Roadmaps</p>
-          <p @click="logout">Logout</p>
+        <div
+          class="profile-list"
+          v-if="profileVisible"
+          v-click-outside="handleClickOutside"
+        >
+          <div class="profile-item" @click="handleRoute('/')">
+            <UserIcon class="profile-icon" /> <span>Profile Details</span>
+          </div>
+          <div class="profile-item" @click="handleRoute('/your-roadmaps')">
+            <RoadIcon class="profile-icon" /><span>Your Roadmaps</span>
+          </div>
+          <div class="profile-item" @click="logout">
+            <LogoutIcon class="profile-icon" />
+            <span>Logout</span>
+          </div>
         </div>
       </div>
     </div>
@@ -28,6 +39,9 @@
 import { defineComponent } from "vue";
 import Logo from "./Icons/Logo.vue";
 import SearchIcon from "./Icons/SearchIcon.vue";
+import UserIcon from "./Icons/UserIcon.vue";
+import RoadIcon from "./Icons/RoadIcon.vue";
+import LogoutIcon from "./Icons/LogoutIcon.vue";
 
 export default defineComponent({
   name: "Navigation",
@@ -36,7 +50,7 @@ export default defineComponent({
       profileVisible: false,
     };
   },
-  components: { Logo, SearchIcon },
+  components: { Logo, SearchIcon, UserIcon, RoadIcon, LogoutIcon },
   methods: {
     logout() {
       this.$store.commit("clearUser");
@@ -44,6 +58,13 @@ export default defineComponent({
     },
     handleProfileVisible() {
       this.profileVisible = !this.profileVisible;
+    },
+    handleClickOutside() {
+      this.profileVisible = !this.profileVisible;
+    },
+    handleRoute(route: string) {
+      this.profileVisible = false;
+      this.$router.push(route);
     },
   },
   computed: {
@@ -80,7 +101,7 @@ nav {
 
   .router-link {
     text-decoration: none;
-    color: #364376;
+    color: #2c3e50;
     cursor: pointer;
   }
   .search-item {
@@ -92,10 +113,10 @@ nav {
     top: 8px;
     width: 16px;
     height: 16px;
-    fill: #364376;
+    fill: #2c3e50;
   }
   .search-bar {
-    border: 1px solid #364376;
+    border: 1px solid #2c3e50;
     border-radius: 8px;
     outline: none;
     height: 32px;
@@ -119,6 +140,10 @@ nav {
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: border-radius 0.1s ease-in;
+      &:hover {
+        border-radius: 8px;
+      }
     }
     .profile-list {
       border-radius: 8px;
@@ -129,15 +154,33 @@ nav {
       top: 40px;
       right: 0px;
       z-index: 400;
-      color: #fff;
+
       padding: 8px 12px;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
       font-weight: 300;
-      p {
+      .profile-item {
         padding: 4px 0px;
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: #fff;
+        text-decoration: none;
+        font-weight: 400;
+        &:hover {
+          color: #f5dd90;
+          & > .profile-icon {
+            fill: #f5dd90;
+          }
+        }
+        .profile-icon {
+          fill: #fff;
+          width: 16px;
+          height: 16px;
+          margin-right: 4px;
+        }
       }
     }
   }

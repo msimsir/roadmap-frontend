@@ -1,5 +1,12 @@
 <template>
   <div class="login-page">
+    <Loading v-show="signInLoading || signUpLoading" />
+    <Modal
+      v-show="error"
+      :content="error"
+      :onClose="onClose"
+      :header="'Error'"
+    />
     <div class="form-container" :class="{ 'register-form': isRegisterForm }">
       <img
         src="../assets/roadmap-login.jpg"
@@ -40,7 +47,7 @@
           />
         </div>
         <div class="form-element">
-          <button @click.prevent="loginHandler" class="login-button">
+          <button @click.prevent="loginHandler" class="normal-button">
             {{ isRegisterForm ? "SIGN UP" : "SIGN IN" }}
           </button>
         </div>
@@ -63,20 +70,21 @@ import { defineComponent } from "vue";
 import { useMutation } from "@vue/apollo-composable";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+import { ApolloError } from "@apollo/client/errors";
 import { SIGNIN_MUTATION, SIGNUP_MUTATION } from "../graphql/documents";
+import Loading from "../components/Loading.vue";
+import Modal from "../components/Modal.vue";
 import Logo from "../components/Icons/Logo.vue";
 import EnvelopeIcon from "../components/Icons/EnvelopeIcon.vue";
 import LockIcon from "../components/Icons/LockIcon.vue";
 import UserIcon from "../components/Icons/UserIcon.vue";
-import { IUserRegisterForm, Nullable } from "../types";
+import { IUserRegisterForm } from "../types";
 
 export default defineComponent({
   name: "Login",
   data() {
     return {
       isRegisterForm: false,
-      signUpError: null as Nullable<string>,
-      loading: false,
       userForm: {
         firstName: "",
         lastName: "",
@@ -86,61 +94,64 @@ export default defineComponent({
       } as IUserRegisterForm,
     };
   },
-  components: { Logo, EnvelopeIcon, LockIcon, UserIcon },
+  components: { Logo, EnvelopeIcon, LockIcon, UserIcon, Loading, Modal },
   setup() {
     const store = useStore();
     const router = useRouter();
-    const {
-      mutate: signUpMutate,
-      onError: onSignUpError,
-      loading: signUpLoading,
-    } = useMutation(SIGNUP_MUTATION);
-    const { mutate: signInMutate, onError: onSignInError } =
+    const { mutate: signUpMutate, loading: signUpLoading } =
+      useMutation(SIGNUP_MUTATION);
+    const { mutate: signInMutate, loading: signInLoading } =
       useMutation(SIGNIN_MUTATION);
 
     async function signUp(userForm: IUserRegisterForm) {
-      let signUpResult = await signUpMutate({
-        ...userForm,
-      });
-      const payload = signUpResult?.data?.signIn;
-      const user = {
-        _id: payload?.user?._id,
-        firstName: payload?.user?.firstName,
-        lastName: payload?.user?.lastName,
-        username: payload?.user?.username,
-        email: payload?.user?.email,
-        token: payload?.token,
-      };
-      store.commit("setUser", user);
-      console.log(signUpLoading);
-      router.push({ name: "Home" });
-      onSignUpError((err) => {
-        return err;
-      });
+      try {
+        let signUpResult = await signUpMutate({
+          ...userForm,
+        });
+        const payload = signUpResult?.data?.signIn;
+        const user = {
+          _id: payload?.user?._id,
+          firstName: payload?.user?.firstName,
+          lastName: payload?.user?.lastName,
+          username: payload?.user?.username,
+          email: payload?.user?.email,
+          token: payload?.token,
+        };
+        store.commit("setUser", user);
+        router.push({ name: "Home" });
+      } catch (error) {
+        store.commit("setError", (error as ApolloError).message);
+      }
     }
 
     async function signIn(email: string, password: string) {
-      let signInResult = await signInMutate({
-        email,
-        password,
-      });
-      const payload = signInResult?.data?.signIn;
-      const user = {
-        _id: payload?.user?._id,
-        firstName: payload?.user?.firstName,
-        lastName: payload?.user?.lastName,
-        username: payload?.user?.username,
-        email: payload?.user?.email,
-        token: payload?.token,
-      };
-      store.commit("setUser", user);
-      router.push({ name: "Home" });
-      onSignInError((err) => {
-        return err;
-      });
+      try {
+        let signInResult = await signInMutate({
+          email,
+          password,
+        });
+        const payload = signInResult?.data?.signIn;
+        const user = {
+          _id: payload?.user?._id,
+          firstName: payload?.user?.firstName,
+          lastName: payload?.user?.lastName,
+          username: payload?.user?.username,
+          email: payload?.user?.email,
+          token: payload?.token,
+        };
+        store.commit("setUser", user);
+        router.push({ name: "Home" });
+      } catch (error) {
+        store.commit("setError", (error as ApolloError).message);
+      }
     }
 
-    return { signUp, signIn };
+    return {
+      signUp,
+      signIn,
+      signUpLoading,
+      signInLoading,
+    };
   },
   methods: {
     switchForm() {
@@ -152,6 +163,14 @@ export default defineComponent({
       } else {
         this.signIn(this.userForm.email, this.userForm.password);
       }
+    },
+    onClose() {
+      this.$store.commit("setError", null);
+    },
+  },
+  computed: {
+    error() {
+      return this.$store.state.error;
     },
   },
 });
@@ -248,23 +267,6 @@ export default defineComponent({
 
     &:last-child {
       align-items: center;
-    }
-  }
-  .login-button {
-    background: #f5dd90;
-    border-radius: 8px;
-    padding: 8px 12px;
-    opacity: 0.8;
-    border: none;
-    outline: none;
-    margin-top: 16px;
-    cursor: pointer;
-    font-weight: 500;
-    font-size: 16x;
-    &:hover {
-      opacity: 1;
-      color: #2c3e50;
-      transition: opacity 0.6s ease;
     }
   }
 }

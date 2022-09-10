@@ -93,4 +93,22 @@ nav {
     }
   }
 }
+
+.normal-button {
+  background: #f5dd90;
+  border-radius: 8px;
+  padding: 8px 12px;
+  opacity: 0.8;
+  border: none;
+  outline: none;
+  margin-top: 16px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 16x;
+  &:hover {
+    opacity: 1;
+    color: #2c3e50;
+    transition: opacity 0.6s ease;
+  }
+}
 </style>

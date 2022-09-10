@@ -52,13 +52,30 @@ export const GET_ROADMAP_QUERY = gql`
   }
 `;
 
+export const GET_ROADMAPS_QUERY = gql`
+  query GetRoadmaps($search: String, $page: Int, $limit: Int) {
+    getRoadmaps(search: $search, page: $page, limit: $limit) {
+      roadmaps {
+        _id
+        description
+        tags
+        title
+        userId
+        elements
+      }
+      currentPage
+      totalPages
+    }
+  }
+`;
+
 export const CREATE_ROADMAP_MUTATION = gql`
   mutation CreateRoadmap(
-    $title: String
-    $description: String
-    $tags: [String]
-    $elements: String
-    $userId: String
+    $title: String!
+    $description: String!
+    $tags: [String!]
+    $elements: String!
+    $userId: String!
   ) {
     createRoadmap(
       title: $title

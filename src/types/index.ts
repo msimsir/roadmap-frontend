@@ -34,3 +34,13 @@ export interface IRoadmapWithUser extends IRoadmap {
   elements: string;
   userId: string;
 }
+
+export interface IRoadmapResult extends IRoadmapWithUser {
+  _id: string;
+}
+
+export interface ISearchRoadmapsOptions {
+  search: string;
+  page: number;
+  limit: number;
+}

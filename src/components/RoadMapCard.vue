@@ -1,8 +1,8 @@
 <template>
   <div class="card-container">
     <div>
-      <h2>Title</h2>
-      <p>Description</p>
+      <h2>{{ roadmap.title }}</h2>
+      <p>{{ roadmap.description }}</p>
     </div>
     <div class="tags">
       <span>#guitar</span> <span>#music</span><span>#theory</span>
@@ -16,6 +16,8 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
+  name: "RoadmapCard",
+  props: ["roadmap"],
   setup() {
     return {};
   },
