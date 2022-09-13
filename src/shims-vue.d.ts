@@ -6,6 +6,7 @@ declare module "@vue/runtime-core" {
   export interface State {
     selectedRoadmap: IRoadmap;
     roadmaps: Array<Nullable<IRoadmapResult>>;
+    userRoadmaps: Array<Nullable<IRoadmapResult>>;
     favoriteRoadmaps: Array<Nullable<IRoadmap>>;
     user: Nullable<ISignInUser>;
     error: Nullable<string>;

@@ -1,11 +1,12 @@
 <template>
-  <div class="preview-roadmap-container"></div>
+  <div></div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+
 export default defineComponent({
-  name: "PreviewRoadmap",
+  name: "WorkingRoadmap",
 });
 </script>
 

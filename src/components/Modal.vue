@@ -1,5 +1,5 @@
 <template>
-  <div class="background">
+  <div class="background" v-show="show">
     <div class="modal-container">
       <div class="header">
         <span>{{ header }}</span>

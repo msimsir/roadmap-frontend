@@ -69,6 +69,19 @@ export const GET_ROADMAPS_QUERY = gql`
   }
 `;
 
+export const GET_ROADMAPS_OF_USER_QUERY = gql`
+  query GetRoadmapsOfUser($userId: ID!) {
+    getRoadmapsOfUser(userId: $userId) {
+      _id
+      description
+      tags
+      title
+      userId
+      elements
+    }
+  }
+`;
+
 export const CREATE_ROADMAP_MUTATION = gql`
   mutation CreateRoadmap(
     $title: String!

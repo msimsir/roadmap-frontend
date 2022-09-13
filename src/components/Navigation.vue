@@ -20,10 +20,15 @@
           v-click-outside="handleClickOutside"
         >
           <div class="profile-item" @click="handleRoute('/')">
-            <UserIcon class="profile-icon" /> <span>Profile Details</span>
+            <UserIcon class="profile-icon" />
+            <span>Profile Details</span>
           </div>
-          <div class="profile-item" @click="handleRoute('/your-roadmaps')">
-            <RoadIcon class="profile-icon" /><span>Your Roadmaps</span>
+          <div
+            class="profile-item"
+            @click="handleRoute('/your-roadmaps', userid)"
+          >
+            <RoadIcon class="profile-icon" />
+            <span>Your Roadmaps</span>
           </div>
           <div class="profile-item" @click="logout">
             <LogoutIcon class="profile-icon" />
@@ -62,14 +67,21 @@ export default defineComponent({
     handleClickOutside() {
       this.profileVisible = !this.profileVisible;
     },
-    handleRoute(route: string) {
+    handleRoute(route: string, params?: string) {
       this.profileVisible = false;
-      this.$router.push(route);
+      if (params) {
+        this.$router.push(`${route}/${params}`);
+      } else {
+        this.$router.push(`${route}`);
+      }
     },
   },
   computed: {
     user() {
       return this.$store.state.user;
+    },
+    userid() {
+      return this.$store.state.user._id;
     },
     profile() {
       if (this.$store.state.user) {

@@ -1,9 +1,10 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
-import CreateRoadMapView from "../views/CreateRoadMapView.vue";
-import PreviewRoadMapView from "../views/PreviewRoadMapView.vue";
+import CreateRoadmapView from "../views/CreateRoadmapView.vue";
+import PreviewRoadmapView from "../views/PreviewRoadmapView.vue";
 import ProfileRoadmapsView from "../views/ProfileRoadmapsView.vue";
+import WorkingRoadmapView from "../views/WorkingRoadmapView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -19,17 +20,22 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/create-roadmap",
     name: "CreateRoadMap",
-    component: CreateRoadMapView,
+    component: CreateRoadmapView,
   },
   {
-    path: "/preview-roadmap/:roadmap-id",
+    path: "/preview-roadmap/:id",
     name: "PreviewRoadMap",
-    component: PreviewRoadMapView,
+    component: PreviewRoadmapView,
   },
   {
-    path: "/your-roadmaps",
+    path: "/your-roadmaps/:id",
     name: "ProfileRoadmaps",
     component: ProfileRoadmapsView,
+  },
+  {
+    path: "/working-roadmap/:id",
+    name: "WorkingRoadmap",
+    component: WorkingRoadmapView,
   },
 ];
 

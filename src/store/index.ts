@@ -12,6 +12,7 @@ export default createStore<State>({
     },
     user: null,
     roadmaps: [],
+    userRoadmaps: [],
     favoriteRoadmaps: [],
     error: null,
   },
@@ -39,7 +40,9 @@ export default createStore<State>({
     },
     setRoadmaps(state, payload: IRoadmapResult[]) {
       state.roadmaps = payload;
-      console.log("state", state);
+    },
+    setUserRoadmaps(state, payload: IRoadmapResult[]) {
+      state.userRoadmaps = payload;
     },
     clearUser(state) {
       state.user = null;

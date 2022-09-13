@@ -1,15 +1,11 @@
 <template>
   <Loading v-show="loading" />
-  <Modal
-    v-show="error"
-    :content="error?.message"
-    :onClose="onClose"
-    :header="'Error'"
-  />
+  <Modal v-show="error" :content="error?.message" :header="'Error'" />
   <div class="home">
     <div class="cards-container">
       <RoadMapCard
         :roadmap="roadmap"
+        :isMenuShow="false"
         v-for="roadmap in roadmaps"
         :key="roadmap._id"
         v-show="roadmaps"
@@ -40,11 +36,6 @@ export default defineComponent({
     const data = computed(() => result.value?.getRoadmaps.roadmaps ?? []);
     store.commit("setRoadmaps", data);
     return { loading, error };
-  },
-  methods: {
-    onClose() {
-      console.log("setError");
-    },
   },
   computed: {
     roadmaps() {

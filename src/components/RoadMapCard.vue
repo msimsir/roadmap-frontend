@@ -1,25 +1,38 @@
 <template>
   <div class="card-container">
+    <div class="menu-icon" v-show="isMenuShow" @click="handleMenuOptions">
+      <EllipsisIcon class="icon menu" />
+    </div>
     <div>
       <h2>{{ roadmap.title }}</h2>
       <p>{{ roadmap.description }}</p>
     </div>
-    <div class="tags">
-      <span>#guitar</span> <span>#music</span><span>#theory</span>
+    <div class="bottom-part">
+      <div class="tags">
+        <span>#guitar</span> <span>#music</span><span>#theory</span>
+      </div>
+      <div class="icons" v-show="!isMenuShow">
+        <div><ImportIcon class="icon" /></div>
+        <div><EmptyHeartIcon class="icon like" /></div>
+      </div>
     </div>
-    <div class="import-icon">Import</div>
-    <div class="like-icon">Like</div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import EmptyHeartIcon from "./Icons/EmptyHeartIcon.vue";
+import ImportIcon from "./Icons/ImportIcon.vue";
+import EllipsisIcon from "./Icons/EllipsisIcon.vue";
 
 export default defineComponent({
   name: "RoadmapCard",
-  props: ["roadmap"],
-  setup() {
-    return {};
+  props: ["roadmap", "isMenuShow"],
+  components: { EmptyHeartIcon, ImportIcon, EllipsisIcon },
+  methods: {
+    handleMenuOptions() {
+      console.log("menuOptions");
+    },
   },
 });
 </script>
@@ -40,20 +53,46 @@ export default defineComponent({
   justify-content: space-between;
   transition: all 0.5s;
 
-  .tags {
-    span {
-      margin: 0px 4px;
+  .icon {
+    width: 16px;
+    height: 16px;
+    fill: #2c3e50;
+  }
+  .menu-icon {
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    opacity: 0.8;
+    transition: opacity 0.6s ease;
+    &:hover {
+      opacity: 1;
     }
   }
+  .bottom-part {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    .tags {
+      span {
+        margin: 0px 4px;
+      }
+    }
 
-  .import-icon {
-    position: absolute;
-    display: none;
-  }
+    .icons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      & > div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
 
-  .like-icon {
-    position: absolute;
-    display: none;
+    .like {
+      margin-left: 8px;
+    }
   }
 }
 </style>
