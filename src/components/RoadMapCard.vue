@@ -3,17 +3,36 @@
     <div class="menu-icon" v-show="isMenuShow" @click="handleMenuOptions">
       <EllipsisIcon class="icon menu" />
     </div>
-    <div>
+    <div class="menu-options" v-show="isMenu">
+      <ul>
+        <li>On Work</li>
+        <li>Delete</li>
+      </ul>
+    </div>
+    <div class="card-content">
       <h2>{{ roadmap.title }}</h2>
-      <p>{{ roadmap.description }}</p>
+      <p class="roadmap-desc">{{ roadmap.description }}</p>
     </div>
     <div class="bottom-part">
       <div class="tags">
-        <span>#guitar</span> <span>#music</span><span>#theory</span>
+        <span v-for="tag in roadmap.tags" :key="tag">#{{ tag }}</span>
       </div>
       <div class="icons" v-show="!isMenuShow">
-        <div><ImportIcon class="icon" /></div>
-        <div><EmptyHeartIcon class="icon like" /></div>
+        <div class="import-icon-container">
+          <EmptyImportIcon class="icon non-import" />
+          <FilledImportIcon class="icon imported" />
+        </div>
+        <div
+          class="like-icon-container"
+          v-show="!isYourOwn"
+          @click="likeRoadmap(roadmap._id)"
+        >
+          <EmptyHeartIcon
+            class="icon dislike"
+            v-if="!handleLikeIcon(roadmap?.likes)"
+          />
+          <FilledHeartIcon class="icon like" v-else />
+        </div>
       </div>
     </div>
   </div>
@@ -22,16 +41,44 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import EmptyHeartIcon from "./Icons/EmptyHeartIcon.vue";
-import ImportIcon from "./Icons/ImportIcon.vue";
+import EmptyImportIcon from "./Icons/EmptyImportIcon.vue";
 import EllipsisIcon from "./Icons/EllipsisIcon.vue";
+import FilledHeartIcon from "./Icons/FilledHeartIcon.vue";
+import FilledImportIcon from "./Icons/FilledImportIcon.vue";
 
 export default defineComponent({
   name: "RoadmapCard",
-  props: ["roadmap", "isMenuShow"],
-  components: { EmptyHeartIcon, ImportIcon, EllipsisIcon },
+  props: ["roadmap", "isMenuShow", "isYourOwn", "likeRoadmap"],
+  data() {
+    return {
+      isMenu: false,
+    };
+  },
+  components: {
+    EmptyHeartIcon,
+    EmptyImportIcon,
+    EllipsisIcon,
+    FilledHeartIcon,
+    FilledImportIcon,
+  },
   methods: {
     handleMenuOptions() {
-      console.log("menuOptions");
+      this.isMenu = !this.isMenu;
+    },
+    handleLikeIcon(array: string[]) {
+      if (array.includes(this.$store.state.user._id)) {
+        return true;
+      } else {
+        false;
+      }
+    },
+  },
+  computed: {
+    roadmaps() {
+      return this.$store.state.roadmaps;
+    },
+    user() {
+      return this.$store.state.user;
     },
   },
 });
@@ -41,7 +88,7 @@ export default defineComponent({
 .card-container {
   position: relative;
   width: 100%;
-  height: 150px;
+  height: 200px;
   border-radius: 8px;
   padding: 16px;
   background-color: #d9d9d9;
@@ -53,6 +100,29 @@ export default defineComponent({
   justify-content: space-between;
   transition: all 0.5s;
 
+  .menu-options {
+    position: absolute;
+    background: #fff;
+    top: 32px;
+    right: 8px;
+    height: 100px;
+    width: 100px;
+    border-radius: 8px;
+    z-index: 400;
+    -webkit-box-shadow: 10px 1px 8px -2px rgba(0, 0, 0, 0.25);
+    box-shadow: 10px 1px 8px -2px rgba(0, 0, 0, 0.25);
+    padding: 8px;
+    ul {
+      li {
+        display: block;
+        margin-bottom: 4px;
+        transition: color ease 0.8s;
+        &:hover {
+          color: #f5dd90;
+        }
+      }
+    }
+  }
   .icon {
     width: 16px;
     height: 16px;
@@ -68,14 +138,40 @@ export default defineComponent({
       opacity: 1;
     }
   }
+  .card-content {
+    width: 100%;
+    .roadmap-desc {
+      width: 100%;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
   .bottom-part {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
     width: 100%;
     .tags {
+      display: flex;
+      justify-content: flex-start;
+      flex-wrap: wrap;
       span {
-        margin: 0px 4px;
+        background-color: #f5dd90;
+        padding: 4px 8px;
+        border-radius: 8px;
+        margin: 4px 4px 4px 0px;
+        height: 24px;
+        font-size: 12px;
+        color: #2c3e50;
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden !important;
+        &:first-of-type {
+          margin-left: 0px;
+        }
       }
     }
 
@@ -83,6 +179,7 @@ export default defineComponent({
       display: flex;
       align-items: center;
       justify-content: center;
+      margin-bottom: 8px;
       & > div {
         display: flex;
         align-items: center;
@@ -90,8 +187,24 @@ export default defineComponent({
       }
     }
 
-    .like {
-      margin-left: 8px;
+    .like-icon-container {
+      .dislike,
+      .like {
+        margin-left: 8px;
+      }
+    }
+    .import-icon-container {
+      .imported {
+        display: none;
+      }
+      &:hover {
+        .non-import {
+          display: none;
+        }
+        .imported {
+          display: block;
+        }
+      }
     }
   }
 }

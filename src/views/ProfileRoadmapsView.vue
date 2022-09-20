@@ -4,7 +4,7 @@
   <div class="wrapper">
     <div class="your-roadmap">
       <h3 class="title">Your Roadmaps</h3>
-      <div class="cards-container" v-if="roadmaps">
+      <div class="cards-container" v-if="roadmaps?.length > 0">
         <RoadMapCard
           :roadmap="roadmap"
           :isMenuShow="true"

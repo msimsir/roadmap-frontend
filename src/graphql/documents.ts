@@ -48,6 +48,7 @@ export const GET_ROADMAP_QUERY = gql`
       title
       description
       tags
+      likes
     }
   }
 `;
@@ -62,6 +63,7 @@ export const GET_ROADMAPS_QUERY = gql`
         title
         userId
         elements
+        likes
       }
       currentPage
       totalPages
@@ -78,6 +80,7 @@ export const GET_ROADMAPS_OF_USER_QUERY = gql`
       title
       userId
       elements
+      likes
     }
   }
 `;
@@ -102,6 +105,20 @@ export const CREATE_ROADMAP_MUTATION = gql`
       description
       tags
       elements
+      userId
+    }
+  }
+`;
+
+export const LIKE_ROADMAP_MUTATION = gql`
+  mutation LikeRoadmap($id: ID!) {
+    likeRoadmap(_id: $id) {
+      _id
+      description
+      elements
+      likes
+      tags
+      title
       userId
     }
   }
