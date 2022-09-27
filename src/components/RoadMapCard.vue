@@ -1,5 +1,8 @@
 <template>
-  <div class="card-container">
+  <div
+    class="card-container"
+    @click="handleRoute('/preview-roadmap', roadmap?._id)"
+  >
     <div class="menu-icon" v-show="isMenuShow" @click="handleMenuOptions">
       <EllipsisIcon class="icon menu" />
     </div>
@@ -10,12 +13,12 @@
       </ul>
     </div>
     <div class="card-content">
-      <h2>{{ roadmap.title }}</h2>
-      <p class="roadmap-desc">{{ roadmap.description }}</p>
+      <h2>{{ roadmap?.title }}</h2>
+      <p class="roadmap-desc">{{ roadmap?.description }}</p>
     </div>
     <div class="bottom-part">
       <div class="tags">
-        <span v-for="tag in roadmap.tags" :key="tag">#{{ tag }}</span>
+        <span v-for="tag in roadmap?.tags" :key="tag">#{{ tag }}</span>
       </div>
       <div class="icons" v-show="!isMenuShow">
         <div class="import-icon-container">
@@ -25,7 +28,7 @@
         <div
           class="like-icon-container"
           v-show="!isYourOwn"
-          @click="likeRoadmap(roadmap._id)"
+          @click="handleLikeRoadmap(roadmap?._id)"
         >
           <EmptyHeartIcon
             class="icon dislike"
@@ -45,10 +48,24 @@ import EmptyImportIcon from "./Icons/EmptyImportIcon.vue";
 import EllipsisIcon from "./Icons/EllipsisIcon.vue";
 import FilledHeartIcon from "./Icons/FilledHeartIcon.vue";
 import FilledImportIcon from "./Icons/FilledImportIcon.vue";
+import { IRoadmapResult } from "../types";
 
 export default defineComponent({
   name: "RoadmapCard",
-  props: ["roadmap", "isMenuShow", "isYourOwn", "likeRoadmap"],
+  props: {
+    roadmap: {
+      type: Object as () => IRoadmapResult,
+    },
+    isMenuShow: {
+      type: Boolean,
+    },
+    isYourOwn: {
+      type: Boolean,
+    },
+    likeRoadmap: {
+      type: Function,
+    },
+  },
   data() {
     return {
       isMenu: false,
@@ -65,12 +82,23 @@ export default defineComponent({
     handleMenuOptions() {
       this.isMenu = !this.isMenu;
     },
-    handleLikeIcon(array: string[]) {
-      if (array.includes(this.$store.state.user._id)) {
-        return true;
+    handleLikeIcon(array?: string[]) {
+      if (this.$store.state.user !== null) {
+        if (array && array.includes(this.$store.state.user._id)) {
+          return true;
+        } else {
+          return false;
+        }
       } else {
-        false;
+        return false;
       }
+    },
+    handleLikeRoadmap(id?: string) {
+      this.$props.likeRoadmap && this.$props.likeRoadmap(id);
+    },
+    handleRoute(route: string, params?: string) {
+      this.$store.commit("setSelectedRoadmap", this.roadmap);
+      this.$router.push(`${route}/${params}`);
     },
   },
   computed: {
@@ -98,7 +126,11 @@ export default defineComponent({
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
-  transition: all 0.5s;
+  transition: all 0.1s ease-in;
+
+  &:hover {
+    outline: 1px solid #2c3e50;
+  }
 
   .menu-options {
     position: absolute;
